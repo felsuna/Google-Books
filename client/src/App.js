@@ -34,11 +34,19 @@ class App extends Component {
 
         var displayBookData = this.state.data.map((each, index) =>
             <div key={index}>
-                <h2>{each.volumeInfo.title}</h2>
-                <p>Written By: {each.volumeInfo.authors}</p>
-                <p>{each.volumeInfo.description}</p>
-
-
+                <List>
+                    <ListItem>
+                        <h2>{each.volumeInfo.title}</h2>
+                        <p>Written By: {each.volumeInfo.authors}</p>
+                        <p>{each.volumeInfo.description}</p>
+                        <p>
+                            <a>Preview Link: {each.volumeInfo.previewLink}</a>
+                        </p>
+                        <p>
+                        <a>Image: {each.volumeInfo.imageLinks.smallThumbnail}</a>
+                        </p>
+                    </ListItem>
+                </List>
             </div>
         )
         return (
@@ -55,11 +63,7 @@ class App extends Component {
 
                 <Container>
                     <h2>Results:</h2>
-                    <List>
-                        <ListItem>
-                               <strong>{displayBookData}</strong> 
-                        </ListItem>
-                    </List>
+                    <strong>{displayBookData}</strong>
                 </Container>
             </div>
         );
