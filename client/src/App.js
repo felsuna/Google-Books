@@ -1,35 +1,69 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-const axios = require("axios");
+import React, { Component } from 'react';
+// import './App.css';
+import Jumbotron from './components/Jumbotron';
+import { Col, Row, Container } from './components/Grid';
+import { List, ListItem } from './components/List';
+
 
 class App extends Component {
-state = {
-  success: false
-}
-//Instructor demo
-componentDidMount(){
-  axios.get("/api")
-  .then(({data})=>{
-    this.setState({
-      success: data.success
-    })
-  })
-}
 
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    state = {
+        searchTerm: 'Donut',
+        data: []
+    }
+
+    search = () => {
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.searchTerm}`)
+            .then((data) => {
+                return data.json()
+            })
+            .then((data) => {
+                this.setState({
+                    data: data.items
+                })
+            })
+    };
+
+    searchTerm = (event) => {
+        this.setState({
+            searchTerm: event.target.value
+        })
+    };
+
+    render() {
+
+        var displayBookData = this.state.data.map((each, index) =>
+            <div key={index}>
+                <h2>{each.volumeInfo.title}</h2>
+                <p>Written By: {each.volumeInfo.authors}</p>
+                <p>{each.volumeInfo.description}</p>
+
+
+            </div>
+        )
+        return (
+            <div className="App">
+                <Jumbotron>
+                    <h1>Google Books</h1>
+                </Jumbotron>
+                <Row>
+                    <Container>
+                        <h1>Search</h1>
+                        <input onChange={this.searchTerm} type="text" placeholder="search term" />
+                        <button onClick={this.search}>Search</button>
+                    </Container></Row>
+
+                <Container>
+                    <h2>Results:</h2>
+                    <List>
+                        <ListItem>
+                               <strong>{displayBookData}</strong> 
+                        </ListItem>
+                    </List>
+                </Container>
+            </div>
+        );
+    };
 }
 
 export default App;
